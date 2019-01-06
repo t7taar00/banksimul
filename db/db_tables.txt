@@ -1,0 +1,35 @@
+CREATE TABLE customer(
+customer_id SMALLINT primary key auto_increment,
+name VARCHAR(45) NOT NULL,
+address VARCHAR(45) NOT NULL,
+phone VARCHAR(45) NOT NULL
+);
+
+CREATE TABLE account(
+account_id SMALLINT primary key auto_increment,
+customer_id SMALLINT,
+balance DOUBLE,
+FOREIGN KEY(customer_id) REFERENCES customer(customer_id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT
+);
+
+CREATE TABLE entry(
+entry_id SMALLINT primary key auto_increment,
+account_id SMALLINT,
+time_stamp TIMESTAMP NOT NULL,
+amount DOUBLE NOT NULL,
+FOREIGN KEY(account_id) REFERENCES account(account_id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT
+);
+
+CREATE TABLE card(
+card_id VARCHAR(45) primary key,
+account_id SMALLINT,
+pin CHAR(4) NOT NULL,
+lock_status TINYINT(1) NOT NULL,
+FOREIGN KEY(account_id) REFERENCES account(account_id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT
+);

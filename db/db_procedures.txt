@@ -1,0 +1,27 @@
+DELIMITER //
+  CREATE PROCEDURE withdraw_transaction(IN id_account SMALLINT, IN transfer_amount DOUBLE)
+  BEGIN
+  
+  START TRANSACTION;
+  UPDATE account SET balance = balance - transfer_amount WHERE account_id = id_account;
+  SET @success = ROW_COUNT();
+  IF (@success > 0) THEN
+    COMMIT; 
+  ELSE
+    ROLLBACK;
+    END IF;
+
+  END //
+DELIMITER ;
+
+
+DELIMITER //
+  CREATE TRIGGER withdraw_entry
+      BEFORE UPDATE ON account
+      FOR EACH ROW
+  BEGIN
+      INSERT INTO entry
+      SET account_id = OLD.account_id,
+          amount = OLD.balance - NEW.balance;
+  END //
+DELIMITER ;
